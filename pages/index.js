@@ -1,7 +1,43 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
+import NavBar from "../src/Components/NavBar";
+import { useGQLQuery } from "../src/Components/hooks/useGQLQuery";
+import { gql } from "graphql-request";
 
-export default function Home() {
+import { Button, Flex, Box, Stack, Text, Image } from "@chakra-ui/react";
+
+const query = gql`
+  query {
+    viewer {
+      pinnedItems(first: 6) {
+        nodes {
+          ... on Repository {
+            name
+            openGraphImageUrl
+            description
+            languages(first: 100) {
+              nodes {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export default function Home(props) {
+  const { data, isLoading, error } = useGQLQuery("viewer", query, {
+    initialData: props?.viewer,
+  });
+
+  const {
+    description,
+    openGraphImageUrl: image,
+    name,
+  } = data.viewer.pinnedItems.nodes[0];
+
   return (
     <div className={styles.container}>
       <Head>
@@ -9,57 +45,95 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <NavBar />
       <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+        <Stack spacing={2}>
+          <Text fontSize="md" align="center">
+            Hello Im Braden, Im a full-time Software Engineer who specializes in
+            JavaScript.
+          </Text>
+          <Text fontSize="md" align="center">
+            Check out some of my work in the Projects section.
+          </Text>
+        </Stack>
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
+        <Flex style={{ width: "100%" }} align="center" justify="center">
+          <Box
+            style={{ margin: ".25rem" }}
+            maxW="sm"
+            borderWidth="1px"
+            borderRadius="lg"
+            overflow="hidden"
           >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+            <Image
+              src={image}
+              alt={image}
+              htmlWidth="350px"
 
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
+            />
+            <Box
+              color="gray.500"
+              fontWeight="semibold"
+              letterSpacing="wide"
+              fontSize="xs"
+              textTransform="uppercase"
+              ml="2"
+            >
+                              {description}
+            </Box>
+          </Box>
+          <Box
+            style={{ margin: ".25rem" }}
+            maxW="sm"
+            borderWidth="1px"
+            borderRadius="lg"
+            overflow="hidden"
           >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+            <Image
+              src="https://www.goodcore.co.uk/blog/wp-content/uploads/2019/08/coding-vs-programming-2.jpg"
+              alt="computer Img"
+              htmlWidth="350px"
+            />
+            <Box
+              color="gray.500"
+              fontWeight="semibold"
+              letterSpacing="wide"
+              fontSize="xs"
+              textTransform="uppercase"
+              ml="2"
+            >
+              Some Text
+            </Box>
+          </Box>
+          <Box
+            style={{ margin: ".25rem" }}
+            maxW="sm"
+            borderWidth="1px"
+            borderRadius="lg"
+            overflow="hidden"
+          >
+            <Image
+              src="https://www.goodcore.co.uk/blog/wp-content/uploads/2019/08/coding-vs-programming-2.jpg"
+              alt="computer Img"
+              htmlWidth="350px"
+            />
+            <Box
+              color="gray.500"
+              fontWeight="semibold"
+              letterSpacing="wide"
+              fontSize="xs"
+              textTransform="uppercase"
+              ml="2"
+            >
+              Some Text
+            </Box>
+          </Box>
+        </Flex>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
     </div>
-  )
+  );
 }
