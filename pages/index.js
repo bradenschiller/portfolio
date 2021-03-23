@@ -18,6 +18,8 @@ import {
 const query = gql`
   query {
     viewer {
+      avatarUrl
+      bio
       pinnedItems(first: 4) {
         nodes {
           ... on Repository {
@@ -63,6 +65,7 @@ export default function Home(props) {
       </div>
     );
   } else {
+    const { avatarUrl, bio } = data?.viewer;
     const projects = data?.viewer?.pinnedItems?.nodes;
 
     return (
@@ -74,21 +77,22 @@ export default function Home(props) {
 
         <NavBar />
         <main className={styles.main}>
-          <h1 className={styles.title}>
-            Welcome to <a href="https://nextjs.org">Next.js!</a>
-          </h1>
+          <Image className={styles.bioImage} src={avatarUrl} alt="Me" />
+          <Text fontSize="50px" color="#0070F3">
+            Software Engineer
+          </Text>
 
           <Stack spacing={2}>
             <Text fontSize="md" align="center">
-              Hello Im Braden, Im a full-time Software Engineer who specializes
-              in JavaScript.
-            </Text>
-            <Text fontSize="md" align="center">
-              Check out some of my work in the Projects section.
+              {bio}
             </Text>
           </Stack>
 
-          <Flex style={{ width: "100%" }} align="center" justify="center">
+          <Flex
+            style={{ width: "100%", margin: ".25rem" }}
+            align="center"
+            justify="center"
+          >
             <ProjectList projects={projects} />
           </Flex>
         </main>

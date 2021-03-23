@@ -125,6 +125,7 @@
 .boxes {
   margin: .25rem;
   max-width: 250px;
+  padding: .5rem;
 }
 
 .boxes:hover {
@@ -133,4 +134,9 @@
   top: -4px;
   border: 1px solid #cccccc;
   background-color: white;
+}
+
+.bioImage {
+  border: 1px solid rgba(38, 38, 38, 0.2);
+  border-radius: 50%;
 }
